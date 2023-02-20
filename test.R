@@ -51,13 +51,28 @@ system.time(a2 <- .C("scg",
    n_p = as.integer(n),
    max_iter_p = as.integer(max_iter),
    tol_p = as.double(tol), 
-   r_norm = as.double(r_norm)
+   r_norm = as.double(r_norm),
+   steps = as.integer(1),
+   prev = as.integer(2)
+))
+
+system.time(a3 <- .C("scg", 
+   A = as.double(A),
+   b = as.double(b),
+   n_p = as.integer(n),
+   max_iter_p = as.integer(max_iter),
+   tol_p = as.double(tol), 
+   r_norm = as.double(r_norm),
+   steps = as.integer(2),
+   prev = as.integer(2)
 ))
 
 
 
 pdf("pcg_subset.pdf", width=8, height=8)
-plot(log10(a1$r_norm), type = "o", xlab = "iteration", ylab = "log10 residual norm",col = "blue"  )
-points(log10(a2$r_norm), type = "o", xlab = "iteration", ylab = "log10 residual norm", col = "red"  )
+plot(log10(a1$r_norm), type = "o", xlab = "iteration", ylab = "log10 residual norm",col = "blue")
+points(log10(a2$r_norm), type = "o", xlab = "iteration", ylab = "log10 residual norm", col = "red")
+points(log10(a3$r_norm), type = "o", xlab = "iteration", ylab = "log10 residual norm", col = "green")
+
 dev.off()
 

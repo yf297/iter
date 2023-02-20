@@ -18,13 +18,15 @@ void Aconj(double* pmat, double* Apmat, double* gamma, double* q, int n, int k, 
 
 }
 
-void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* r_norm){
+void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* r_norm, int* steps_p, int* prev_p){
 
 
   // dereference
   int n = *n_p;
   int max_iter = *max_iter_p;
   double tol = *tol_p;
+  int steps = *steps_p;
+  int prev = *prev_p;
 
   double* gamma  = (double*) malloc(max_iter * sizeof(double)); 
   double* Apmat  = (double*) malloc(max_iter * n * sizeof(double));
@@ -34,7 +36,7 @@ void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double*
 
 
   int k = 0;
-  int ind = 1;
+  int ind = 10;
   
   double* r = b;
   r_norm[k] = pow(cblas_dnrm2(n, r, 1),2);
@@ -74,14 +76,14 @@ void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double*
   // ||r|| 
   r_norm[k] = pow(cblas_dnrm2(n, r, 1),2) ; 
   
-  while( (k < max_iter)){
+  while( (k < max_iter) && (r_norm[k] > tol) ){
   
     // q
     memcpy(q, r, ind*sizeof(double));
     //memset(q + ind , 0.0, (n-ind)*sizeof(double));  
 
     // p
-    int m = max(k-10, 0);
+    int m = max(k-prev, 0);
     Aconj(pmat, Apmat, gamma, q, n, k, m, ind);
     memcpy(p, q, ind*sizeof(double));
     memcpy(pmat + k*n, p, ind*sizeof(double));
@@ -104,7 +106,10 @@ void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double*
     // ||r||
     r_norm[k] = pow(cblas_dnrm2(n, r, 1),2) ; 
 
-    ind = min(ind+1, n);
+   if(k%steps==0){
+    ind = min(ind+10, n);
+  }
+  
   }
 
 }

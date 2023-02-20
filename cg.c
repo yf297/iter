@@ -42,7 +42,7 @@ void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* 
   // ||r|| 
   r_norm[k] = pow(cblas_dnrm2(n, r, 1),2) ; 
   
-  while( (k < max_iter)){
+  while( (k < max_iter) && (r_norm[k] > tol)){
 
     // q
     memcpy(q, r, n*sizeof(double));
