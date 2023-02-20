@@ -6,8 +6,6 @@
 
 void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* r_norm){
 
-
-  // dereference
   int n = *n_p;
   int max_iter = *max_iter_p;
   double tol = *tol_p;
@@ -23,9 +21,8 @@ void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* 
   memcpy(q, r, n*sizeof(double));
  
   // p
-   double* p  = (double *) malloc(n * sizeof(double)); 
+  double* p  = (double *) malloc(n * sizeof(double)); 
   memcpy(p, q, n*sizeof(double));
-
   
   // Ap
   double* Ap = (double *) malloc(n * sizeof(double)); 
@@ -46,7 +43,7 @@ void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* 
   r_norm[k] = pow(cblas_dnrm2(n, r, 1),2) ; 
   
   while( (k < max_iter)){
-  
+
     // q
     memcpy(q, r, n*sizeof(double));
     
@@ -54,7 +51,6 @@ void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* 
     double c = cblas_ddot(n, q, 1, Ap, 1)/gamma[k-1];
     cblas_daxpy(n, -1*c, p, 1, q, 1); 
     memcpy(p, q, n*sizeof(double));
-
 
     // Ap
     cblas_dgemv(CblasColMajor,CblasNoTrans, n, n, 1.0, A, n, p, 1, 0.0, Ap, 1); 
