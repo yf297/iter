@@ -1,10 +1,10 @@
 CC = gcc
 LD = gcc
 CFLAGS =  
-LDFLAGS = -shared -lblas -lm
-OBJFILES = scg.o cg.o
+LDFLAGS = -shared -llapacke -llapack -lblas -lm
+OBJFILES = scg.o cg.o chol.o
 SHARED = iter
-SOURCE = scg.c cg.c
+SOURCE = scg.c cg.c chol.c
 
 all: $(SHARED)
 
@@ -15,4 +15,4 @@ $(OBJFILES): $(SOURCE)
 	$(CC) $(CFLAGS) $(INC) -c $(SOURCE) 
 
 clean:
-	rm -f $(OBJFILES) $(SHARED) *.jpg
+	rm -f $(OBJFILES) $(SHARED) *.jpg *.pdf

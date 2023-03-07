@@ -18,13 +18,14 @@ void Aconj(double* pmat, double* Apmat, double* gamma, double* q, int n, int k, 
 
 }
 
-void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* r_norm, int* steps_p, int* prev_p){
+void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* r_norm, int* batch_p, int* steps_p, int* prev_p, int* k_p){
 
 
   // dereference
   int n = *n_p;
   int max_iter = *max_iter_p;
   double tol = *tol_p;
+  int batch = *batch_p;
   int steps = *steps_p;
   int prev = *prev_p;
 
@@ -36,7 +37,7 @@ void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double*
 
 
   int k = 0;
-  int ind = 10;
+  int ind = batch;
   
   double* r = b;
   r_norm[k] = pow(cblas_dnrm2(n, r, 1),2);
@@ -107,10 +108,10 @@ void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double*
     r_norm[k] = pow(cblas_dnrm2(n, r, 1),2) ; 
 
    if(k%steps==0){
-    ind = min(ind+10, n);
+    ind = min(ind+batch, n);
   }
   
   }
-
+  *k_p = k;
 }
 

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 
-void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* r_norm){
+void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* r_norm, int* k_p){
 
   int n = *n_p;
   int max_iter = *max_iter_p;
@@ -69,5 +69,6 @@ void cg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double* 
     // ||r||
     r_norm[k] = pow(cblas_dnrm2(n, r, 1), 2) ; 
   }
-
+  
+  *k_p = k;
 }
