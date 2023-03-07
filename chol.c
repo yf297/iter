@@ -15,10 +15,14 @@ void chol_solve(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, 
   // copy of A
   double* Ac = (double*) malloc( n*n*sizeof(double));
   memcpy(Ac, A, n*n*sizeof(double));
+  
+  // copy of b
+  double* bc = (double*) malloc( n*sizeof(double));
+  memcpy(bc, b, n*sizeof(double));
 
   // 0th residual
   int k = 0;
-  double* r = b;
+  double* r = bc;
   r_norm[k] = pow(cblas_dnrm2(n, r, 1),2);
  
   // A[0] = sqrt(A[0]);
@@ -40,17 +44,19 @@ void chol_solve(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, 
     int ipiv[n];
     LAPACKE_dtrtrs(LAPACK_COL_MAJOR, 'U', 'T', 'N', k, 1, A, n, A + k*n, n);
     A[k*n + k] = pow(A[k*n + k] -  pow(cblas_dnrm2(k, A + k*n, 1), 2), 0.5);
-    memcpy(x, b, (k+1)*sizeof(double));
-    LAPACKE_dtrtrs(LAPACK_COL_MAJOR,'U', 'T', 'N', k+1, 1, A, n, x, n);
-    LAPACKE_dtrtrs(LAPACK_COL_MAJOR,'U', 'N', 'N', k+1, 1, A, n, x, n);
   
     // (k+1)st step and residual
     k = k+1;
+    memcpy(x, b, k*sizeof(double));
+    LAPACKE_dtrtrs(LAPACK_COL_MAJOR,'U', 'T', 'N', k, 1, A, n, x, n);
+    LAPACKE_dtrtrs(LAPACK_COL_MAJOR,'U', 'N', 'N', k, 1, A, n, x, n);
     memcpy(r, b, n*sizeof(double));
-    cblas_dgemv(CblasColMajor, CblasNoTrans, n, k+1, -1, Ac, n, x, 1, 1, r, 1); 
+    cblas_dgemv(CblasColMajor, CblasNoTrans, n, k, -1, Ac, n, x, 1, 1, r, 1); 
     r_norm[k] = pow(cblas_dnrm2(n, r, 1), 2) ; 
 
   }
   
+  free(Ac);
+  free(bc);
   *k_p = k;
 }
