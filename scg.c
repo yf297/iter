@@ -33,7 +33,7 @@ void scg(double* A, double* b, int* n_p, int* max_iter_p, double* tol_p, double*
   double* Apmat  = (double*) malloc(max_iter * n * sizeof(double));
   double* pmat   = (double*) malloc(max_iter * n * sizeof(double));
   memset(Apmat, 0.0, n * sizeof(double));
-  memset( pmat, 0.0, n * sizeof(double));
+  memset(pmat, 0.0, n * sizeof(double));
 
 
   int k = 0;
