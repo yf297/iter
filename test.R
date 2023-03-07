@@ -4,7 +4,7 @@ library(pcg)
 source("time.R")
 library(xtable)
 
-set.seed(1)
+#set.seed(1)
 
 
 # data locations
